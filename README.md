@@ -1,4 +1,4 @@
-# UCI_Project_4
+# UCI Data Analytics Bootcamp | Project 4
 UCI Project 4 - Netflix Recommendations
 
 ## Summary
