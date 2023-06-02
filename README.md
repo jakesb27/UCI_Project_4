@@ -10,3 +10,8 @@ In this project we will be using a Netflix database to provide Netflix recommend
   - HTML/CSS
   - Python Flask
   - Amazon AWS
+
+## Tasks
+  - Amazon AWS – Store the CSV files – Gabriel
+  - Python Pandas – Alex (ML)
+  - Python Flask/HTML & CSS – Jake
