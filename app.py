@@ -1,9 +1,11 @@
-from flask import Flask
+
 from markupsafe import escape
-
-
+from flask import Flask, render_template
 app = Flask(__name__)
 
+@app.route('/')
+def home():
+    return render_template('static/index.html')
 
 @app.route("/<movie>")
 def index_get(movie):
@@ -11,5 +13,5 @@ def index_get(movie):
 
     return f"{escape(movie)} you want to match"
 
-
-app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
