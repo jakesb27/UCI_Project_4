@@ -11,6 +11,41 @@
   <input type="submit" value="Submit">
 </form>
     <h1>Welcome to this Netflix Movie Recommender!</h1>
-    <p>This is a paragraph.</p>
+    <p>Input a movie title below to find out similar titles!</p>
+    <form action="/" method="POST">
+        <input type="text" id="movie-input" name="movie" placeholder="Enter a movie">
+        <button type="submit">Submit</button>
+    </form>
+    
+    {% if data %}
+        <div class="recommendations">
+            <h2>Movie Recommendations:</h2>
+            <ul class="movies-list">
+                {% for movie in data %}
+                    <li>{{ movie }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div id="result-container"></div>
+
+    <script>
+        function submitMovie() {
+            var inputElement = document.getElementById('movie-input');
+            var movie = inputElement.value;
+
+            // Make a request to the Flask app
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/" + encodeURIComponent(movie), true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var resultContainer = document.getElementById('result-container');
+                    resultContainer.innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+    </script>
 </body>
 </html>
