@@ -3,7 +3,7 @@ import altair as alt
 import numpy as np
 from fuzzywuzzy import process
 
-titles = pd.read_csv('../input/netflix-tv-shows-and-movies/titles.csv')
+titles = pd.read_csv('https://movie-recommender-2023.s3.us-west-2.amazonaws.com/titles.csv')
 
 # Checking data type of each column
 titles.dtypes
