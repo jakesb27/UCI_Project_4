@@ -1,9 +1,26 @@
 body {
   background-color: powderblue;
+  font-family: Arial, sans-serif;
 }
+
 h1 {
   color: blue;
 }
+
 p {
   color: red;
 }
+
+.recommendations ul.movies-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+.recommendations ul.movies-list li {
+  display: inline-block;
+  margin-right: 10px;
+  letter-spacing: -1em;
+}
+
+
+

@@ -1,9 +1,13 @@
+from flask import Flask, render_template, request
+from markupsafe import escape
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, normalize
 from sklearn.neighbors import NearestNeighbors
 from fuzzywuzzy import process
 
+app = Flask(__name__)
 
+# Global variables
 url = 'https://movie-recommender-2023.s3.us-west-2.amazonaws.com/titles.csv'
 titles = pd.read_csv(url)
 netflix_titles, knn, norm_data_df, title_names = None, None, None, None
@@ -45,7 +49,7 @@ def prepare_df():
     norm_data_df = pd.DataFrame(norm_data, columns=titles_clean.columns)
 
     knn = NearestNeighbors(metric='cosine', algorithm='brute')
-    knn.fit(norm_data_df)
+    knn.fit(norm_data_df.values)  # Pass norm_data_df.values instead of norm_data_df
 
     # creating df of title names
     title_names = titles.loc[:, ['title']]
@@ -81,38 +85,53 @@ def unique(list_data):
     # Return list data
     return final_list
 
+@app.route('/', methods=['GET', 'POST'])
+def home():
+    if request.method == 'POST':
+        movie = request.form['movie']
+        data = get_movie(movie)
+        return render_template('index.html', data=data)
+    return render_template('index.html')
+
+@app.route("/<movie>")
+def index_get(movie):
+    """Homepage GET request"""
+
+    data = get_movie(movie)
+    print(type(data))
+
+    return render_template('index.html', data=data)
 
 # Find matching title name in dataframe
 def get_movie(title):
     """Function used to find matching titles in DataFrame"""
 
     title = title.lower()
-    result = process.extract(title, netflix_titles, limit = 5)
+    result = process.extract(title, netflix_titles, limit=5)
     i = 1
+    output = []
     for mov in result:
         if i == 1 and mov[1] <= 80:
-            print('No close matches found. Try again.')
+            output = ['No close matches found. Try again.']
             break
         if mov[1] == 100:
             index = netflix_titles.index(title)
-            recommendations(index)
-            return
+            return recommendations(index)  # Return the result of recommendations function
         if mov[1] >= 80 and mov[1] != 100:
             if i == 1:
-                print('Exact match not found for {}. Did you mean:'.format(title))
-            print(str(i) + ') ' + mov[0])
-            i += 1
-
+                return output  # Return the output variable
 
 # get the ten nearest neighbors
 def recommendations(n):
     """Function used for finding the nearest neighbors"""
 
-    neighbor_index = knn.kneighbors([norm_data_df.loc[n]], return_distance=False, n_neighbors=11)
+    neighbor_index = knn.kneighbors([norm_data_df.loc[n].values], return_distance=False, n_neighbors=11)
     neighbor_index = list(neighbor_index[0])
     neighbor_index = neighbor_index[1:11]
-    # print(title_names.loc[neighbor_index])
-    return "recommendations for: " + title_names.loc[n, 'title'] + title_names.loc[neighbor_index]
+    recs = title_names.loc[neighbor_index]
+    return recs.to_string(index=False)
 
 
-prepare_df()
+if __name__ == '__main__':
+    prepare_df()
+    app.run(port=5001)
