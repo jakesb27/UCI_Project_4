@@ -139,4 +139,4 @@ def recommendations(index, title):
 
 if __name__ == '__main__':
     prepare_df()
-    app.run(port=5001, debug=True)
+    app.run(debug=True)
