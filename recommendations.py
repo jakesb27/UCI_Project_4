@@ -129,9 +129,11 @@ def recommendations(n):
     neighbor_index = list(neighbor_index[0])
     neighbor_index = neighbor_index[1:11]
     recs = title_names.loc[neighbor_index]
-    return recs.to_string(index=False)
+    recs_list = recs.values.tolist()
+    data = [item[0].title() for item in recs_list]
+    return data
 
 
 if __name__ == '__main__':
     prepare_df()
-    app.run(port=5001)
+    app.run(port=5001, debug=True)
