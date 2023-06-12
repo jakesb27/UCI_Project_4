@@ -5,45 +5,46 @@
     <title>Movie Recommender</title>
 </head>
 <body>
-  <form action="/action_page.php">
 
-</form>
     <h1>Welcome to this Netflix Movie Recommender!</h1>
     <p>Input a movie title below to find out similar titles!</p>
+
     <form action="/" method="POST">
         <input type="text" id="movie-input" name="movie" placeholder="Enter a movie">
         <button type="submit">Submit</button>
     </form>
     
-    {% if data %}
+    {% if data[0] == 0 %}
         <div class="recommendations">
-            <h2>Movie Recommendations:</h2>
+            <h2>Movie Recommendations For {{ data[2] }}:</h2>
             <ul class="movies-list">
-                {% for movie in data %}
+                {% for movie in data[1] %}
+                    <li>{{ movie }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% elif data[0] == 1 %}
+        <div class="similarities">
+            <h2>No Matching Titles Found For {{ data[2] }}</h2>
+            <h3>Did you mean one of the following?</h3>
+            <ul class="similar-list">
+                {% for movie in data[1] %}
+                    <li>{{ movie }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% elif data[0] == 2 %}
+        <div class="no_results">
+            <h2>No Similar Titles Found For {{ data[2] }}</h2>
+            <h3>Please try again. This title is not on Netflix at this time.</h3>
+            <h3>Here are some titles that Netflix is currently streaming</h3>
+            <ul class="no_results-list">
+                {% for movie in data[1] %}
                     <li>{{ movie }}</li>
                 {% endfor %}
             </ul>
         </div>
     {% endif %}
 
-    <div id="result-container"></div>
-
-    <script>
-        function submitMovie() {
-            var inputElement = document.getElementById('movie-input');
-            var movie = inputElement.value;
-
-            // Make a request to the Flask app
-            var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/" + encodeURIComponent(movie), true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var resultContainer = document.getElementById('result-container');
-                    resultContainer.innerHTML = xhr.responseText;
-                }
-            };
-            xhr.send();
-        }
-    </script>
 </body>
 </html>
