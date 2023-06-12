@@ -19,7 +19,7 @@ def home():
         data = get_movie(movie)
         return render_template('index.html', data=data)
     else:
-        return render_template('index.html')
+        return render_template('index.html', data=None)
 
 
 ###########################################
