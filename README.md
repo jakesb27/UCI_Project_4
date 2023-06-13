@@ -8,6 +8,7 @@ In this project we will be using a Netflix database to provide Netflix recommend
   - Python Pandas
   - Python SciKit-Learn
   - HTML/CSS
+  - Bootstrap
   - Python Flask
   - Amazon AWS
 
